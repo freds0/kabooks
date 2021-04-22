@@ -29,7 +29,7 @@ After validating the data it is possible to select only those audios that have a
 
 ### How to create a docker image
 ```sh
-$ git clone https://gitlab.com/fred_s0/kabooks
+$ git clone https://github.com/freds0/kabooks
 $ cd kabooks
 $ docker build -t kabooks ./
 $ sudo docker run --rm --net='host' -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 -v ~/:/root/ -w /root -it  kabooks
