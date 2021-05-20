@@ -18,4 +18,4 @@ class Config:
 
     # validation
     validation_file = 'validation.csv'
-    val_threshold = 0.7
+    val_threshold = 0.9

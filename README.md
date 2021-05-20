@@ -1,31 +1,41 @@
 # KABooks - KABooks Audiobook dataset creator
-KABooks is an auxiliary tool in the creation of audio datasets, for training Text-to-Speech and Speech-to-Text models, based on the work of Pansori [https://arxiv.org/abs/1812.09798]. 
 
-From a list of audio and text files, KABooks will segments all the audios, performing audio-text alignment using the AENEAS tool. Using another transcription tool, the data are validated and discarded if there is no minimum guarantee of correspondence between the audio and the text.
+KABOOKS is a tool to automate the process of creating datasets for training Text-To-Speech (TTS) and Speech-To-Text (STT) models.
+
+Receiving an audio file and the corresponding text as input, KABooks will clean the text, dividing it into sentences, then use the external tool AENEAS to align the text with the audio. From this alignment, KABooks will segment the audio, according to the sentences created.
+
+Finally, a validation step can be performed. For this, KABooks must use an external translation tool STT (not available here). This validation will calculate the similarity between the sentence and the transcript, using the Levenshtein distance. This step ensures that the text is correct. KABooks ccan be configured to perform a last selection step, in which will be discard audios that do not have a minimum guarantee of similarity between the sentence and the transcript.
 
 Use at your own risk.
 
 ![kabooks-process](imgs/kabooks-process.png)
 
-## Normalize Text
+## Cleaning and Normalization of the text
 
-The subtitles contain segmented text and timing information which corresponds to the audio contents of the associated video. THe timing subtitles is discarded and subtitles are joined. The text corresponding to the sentences is normalized and divided into sentences, according to the punctuation, if any, or the minimum and maximum number of words previously defined.
+In this step, a function is used that receives a raw text file, and performs its cleaning and normalization, dividing it into sentences. This function receives a maximum and minimum number of words that each sentence must contain. The function will try to split the sentences following these limits, but will not limit it strictly. This functionality is provided by the script named "text_normalization.py" and can be used separately.
 
-## Align Text-Audio
+## Align (Synchronization) Text-Audio 
 
-The audio is divided into segments according to the text, according to the timming obtained from AENEAS.
+For alignment, the AENEAS tool is used, which receives an audio file and the text (divided into sentences). A json file will be produced that contains the time (start and end) of each sentence in the text. Audio must be in wav or mp3 format. This functionality is provided by the script named "synchronization.py" and can be used separately.
+
+## Audio Segmentation
+
+This step receives the .json file from the previous step and performs the segmentation of the audio file. This script is based on the script provided by "Keith Ito", who kindly provided it via email. In this step, a logical list of segments is first created, storing the filename, the start and end times. Then, go through this logical list, dividing the original audio, saving each segment to disk. This functionality is provided by the script named "audio_segmentation.py" and can be used separately.
 
 ## Validate
 
-Although the audio and subtitle data are force-aligned with each other, there are also inherent discrepancies between the two. This can come from one or more of the following: inaccurate transcriptions, ambiguous pronunciations, and non-ideal audio conditions (like ambient noise or poor recording quality). To increase the quality of the corpus, the corpus needs to be refined by filtering out inaccurate audio and subtitle pairs.
+Although the audio and text data are force-aligned with each other, several problems can happen that prejudices the results.
+The text may be unclean or incorrect, the pronunciation may be erroneous or the audio may be corrupted (like ambient noise or poor recording quality).
 
-At KABooks, we use an ASR to transcribe the audio files and compare with the aligned subtitles; and then we compared the caption with the transcript using the levenshtein distance to validate de data. 
+KABooks can validate the text of the sentence. To do this, you must have available an external STT (not provided here), such as AWS, Google or Azure. Some sample scripts are available in the "tools" folder.  The external STT will generate a transcript of the segmented audio. So, you can compare the sentence with the transcript using the levenshtein distance, and thus have a guarantee that the audio really matches the text of the sentence.
+
+This functionality is provided by the script named "validation.py" and can be used separately.
 
 ## Selection
 
-After validating the data it is possible to select only those audios that have a minimal similarity between the transcription and the subtitle. In kabooks we discard audios that have less than 90% similarity between subtitles and transcriptions.
+After validating the data it is possible to select only those audios that have a minimal similarity between the transcription and the sentence. KABooks can discard audios that have a similarity value less than a value you define (90% is a good start).
 
-# Installation
+This functionality is provided by the script named "selection.py" and can be used separately.
 
 ### How to create a docker image
 ```sh
