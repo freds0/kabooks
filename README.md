@@ -2,7 +2,7 @@
 
 KABooks is a tool to automate the process of creating datasets for training Text-To-Speech (TTS) and Speech-To-Text (STT) models. It is based on the work of Pansori [https://arxiv.org/abs/1812.09798]. 
 
-Receiving an audio file and the corresponding text as input, KABooks will clean the text, dividing it into sentences, then use the external tool AENEAS to align the text with the audio. From this alignment, KABooks will segment the audio, according to the sentences created.
+Receiving an audio file and the corresponding text as input, KABooks will clean the text, dividing it into sentences, then use the external tool [AENEAS](https://github.com/readbeyond/aeneas) to align the text with the audio. From this alignment, KABooks will segment the audio, according to the sentences created.
 
 Finally, a validation step can be performed. For this, KABooks must use an external translation tool STT (not available here). This validation will calculate the similarity between the sentence and the transcript, using the [Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance). This step ensures that the text is correct. KABooks can be configured to perform a last selection step, in which will be discard audios that do not have a minimum guarantee of similarity between the sentence and the transcript.
 
