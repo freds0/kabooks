@@ -1,6 +1,6 @@
 # KABooks - KABooks Audiobook dataset creator
 
-KABOOKS is a tool to automate the process of creating datasets for training Text-To-Speech (TTS) and Speech-To-Text (STT) models. It is based on the work of Pansori [https://arxiv.org/abs/1812.09798]. 
+KABooks is a tool to automate the process of creating datasets for training Text-To-Speech (TTS) and Speech-To-Text (STT) models. It is based on the work of Pansori [https://arxiv.org/abs/1812.09798]. 
 
 Receiving an audio file and the corresponding text as input, KABooks will clean the text, dividing it into sentences, then use the external tool AENEAS to align the text with the audio. From this alignment, KABooks will segment the audio, according to the sentences created.
 
@@ -65,7 +65,7 @@ Check the "tools" folder for examples of using STT APIs, such as Google, Azure a
 Although the audio and text data are force-aligned with each other, several problems can happen that prejudices the results.
 The text may be unclean or incorrect, the pronunciation may be erroneous or the audio may be corrupted (like ambient noise or poor recording quality).
 
-KATube can validate the text of the sentence. To do this, you must have available an external STT (not provided here), such as AWS, Google or Azure. Some sample scripts are available in the "tools" folder.  The external STT will generate a transcript of the segmented audio. So, you can compare the sentence with the transcript using the levenshtein distance, and thus have a guarantee that the audio really matches the text of the sentence.
+KABooks can validate the text of the sentence. To do this, you must have available an external STT (not provided here), such as AWS, Google or Azure. Some sample scripts are available in the "tools" folder.  The external STT will generate a transcript of the segmented audio. So, you can compare the sentence with the transcript using the levenshtein distance, and thus have a guarantee that the audio really matches the text of the sentence.
 
 This functionality is provided by the script named "validation.py" and can be used separately. Run the script using as input argument the paths of two csv metadata files, the output directory and the path of the output file, which will contain the texts and the Levenshtein distance between them. For example:
 
@@ -75,7 +75,7 @@ $ python validation.py --input_file1=METADATA.CSV --input_file2=TRANSCRIPTS.CSV 
 
 ## Selection
 
-After validating the data it is possible to select only those audios that have a minimal similarity between the transcription and the sentence. KATube can discard audios that have a similarity value less than a value you define (90% is a good start).
+After validating the data it is possible to select only those audios that have a minimal similarity between the transcription and the sentence. KABooks can discard audios that have a similarity value less than a value you define (90% is a good start).
 
 This functionality is provided by the script named "selection.py" and can be used separately. Run the script using as input argument the path of the csv validation file, from the previews step, the minimal value of Levenshtein distance, and the result output file. A security parameter (--force) must be passed in order to effectively delete the files with lower value of Levenshtein distance. For example:
 
@@ -88,17 +88,17 @@ $ python selection.py --csv_file=VALIDATION.csv --min_value=0.9 --save_file=META
 ## How to create a docker image
 
 ```sh
-$ git clone https://github.com/freds0/katube
-$ cd katube
-$ docker build -t katube ./
-$ sudo docker run --rm --net='host' -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 -v ~/:/root/ -w /root -it  katube
+$ git clone https://github.com/freds0/kabooks
+$ cd kabooks
+$ docker build -t kabooks ./
+$ sudo docker run --rm --net='host' -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 -v ~/:/root/ -w /root -it  kabooks
 ```
 
 If you prefer, use a conda environment:
 
 ```sh
-$ conda create -n katube python=3.6 pip
-$ conda activate katube
+$ conda create -n kabooks python=3.6 pip
+$ conda activate kabooks
 ```
 
 ## Aeneas Installation
