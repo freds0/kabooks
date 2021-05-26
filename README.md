@@ -1,4 +1,4 @@
-# KABooks - KABooks Audiobook dataset creator
+# KABooks - KABooks Audiobooks dataset creator
 
 KABooks is a tool to automate the process of creating datasets for training Text-To-Speech (TTS) and Speech-To-Text (STT) models. It is based on the work of Pansori [https://arxiv.org/abs/1812.09798]. 
 
