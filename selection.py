@@ -10,7 +10,7 @@ from os import remove
 from os.path import basename, join, split
 
 
-def select(input_csv_file, output_filepath, min_similarity, force):
+def select(input_csv_file, output_filepath, min_similarity, force = False, show_files = False):
     """
     Given a csv file, selects only files with similarity greater than min_similarity and deletes the others.
 
@@ -18,7 +18,8 @@ def select(input_csv_file, output_filepath, min_similarity, force):
         input_csv_file (str): Input csv filepath following the template: "filename| subtitle | transcript | similarity"
         output_filepath (str): Output csv filepath following the template: "filename| subtitle | transcript | similarity"
         min_similarity (float): Threshold that defines which files will be excluded.
-        force (boolean):  if True, it will remove the files, otherwise only show what files wil be removed.
+        force (boolean):  if True, it will remove the files, 
+        show_files (boolean): if True it will show what files wil be removed.
 
         Returns:
         Boolean: returns True or False.
@@ -54,7 +55,7 @@ def select(input_csv_file, output_filepath, min_similarity, force):
             else:
                 if force:
                     remove(filepath)
-                else:
+                elif show_files:
                     print('rm {}'.format(filepath))
 
         output_file.close()

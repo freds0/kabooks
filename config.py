@@ -18,4 +18,7 @@ class Config:
 
     # validation
     validation_file = 'validation.csv'
-    val_threshold = 0.9
+
+    # selection
+    selection_file = 'selected.csv'
+    min_similarity = -1.0 # Negative value indicates that this step will be ignored

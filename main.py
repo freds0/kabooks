@@ -10,7 +10,7 @@ from synchronization import create_aeneas_json_file
 from audio_segmentation import segment_audio
 from transcribe import convert_audios_samplerate, transcribe_audios
 from validation import create_validation_file
-
+from selection import select
 
 # Verify if transcription has already been performed
 def transcription_already_done(folder):
@@ -63,7 +63,6 @@ def execute(args):
 
             create_normalized_text_from_subtitles_file(subtitle_file=txt_filepath, output_file=output_file, min_words=Config.min_words, max_words=Config.max_words)
 
-        exit()
         # Spliting txt files
         print('Syncronizing audio/txt files...')
         for txt_filepath in tqdm(sorted(glob(output_path + '/*.txt'))):
@@ -119,6 +118,12 @@ def execute(args):
             output_filepath = join(input_folder, Config.validation_file)
             create_validation_file(input_file1=metadata1, input_file2=metadata2, prefix_filepath=output_dir, output_file=output_filepath)
 
+        print('Selecting audio files...')
+        if Config.min_similarity > 0.0:
+            for index, input_folder in enumerate(splited_audios_folder):
+                val_filepath = join(input_folder, Config.validation_file)
+                output_filepath = join(input_folder, Config.selection_file)
+                select(val_filepath, output_filepath, Config.min_similarity, force=False, show_files=False)
 
 def main():
     parser = argparse.ArgumentParser()
