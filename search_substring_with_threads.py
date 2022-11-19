@@ -420,25 +420,9 @@ def get_transcripts(transcripts_text):
     return ordered_transcripts_dict
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-b', '--base_dir', default='./')
-    parser.add_argument('-o', '--output_file', default='./output/result_with_threads.txt')
-    parser.add_argument('-l', '--language', default='pt',
-                        help='Options: pt (portuguese), pl (polish), it (italian), sp (spanish), fr (french), du (dutch), ge (german), en (english)')
-    parser.add_argument('-m', '--metric', default='hamming', help='Options: hamming (low accuracy, low computational cost), levenshtein (high accuracy, high computational cost) or ratcliff (average accuracy, average computational cost)')
-    parser.add_argument('-i', '--input_transcripts_file', default='./output/transcription.csv')
-    parser.add_argument('-c', '--complete_text_file', default='./input/complete_text.txt')
-    parser.add_argument('-n', '--number_threads', default=16)
-    parser.add_argument('-t', '--search_type', default='char', help='Options: word or char')
-    parser.add_argument('-s', '--sequenced_text', action='store_true', default=False)
+def search_substring(transcript_file,complete_text_file, output_file, search_type='char', language='pt', n_threads=10):
 
-    args = parser.parse_args()
-    # Load input files
-    transcript_file = join(args.base_dir, args.input_transcripts_file)
-    complete_text_file = join(args.base_dir, args.complete_text_file)
-
-    output_f = open(args.output_file, "w")
+    output_f = open(output_file, "w")
 
     with open(transcript_file) as f:
         transcripts_text = f.readlines()
@@ -460,10 +444,10 @@ def main():
     for filename, text in tqdm.tqdm(transcripts_dict.items()):
         print('Processing {}'.format(filename))
 
-        if args.search_type == 'char':
-            text_result, similarity, start_position = execute_threads_search_substring_by_char(args.language, text, book_text, start_position=0, similarity_metric='hamming', total_threads=int(args.number_threads))
+        if search_type == 'char':
+            text_result, similarity, start_position = execute_threads_search_substring_by_char(language, text, book_text, start_position=0, similarity_metric='hamming', total_threads=int(n_threads))
         else:
-            text_result, similarity, start_position = execute_threads_search_substring_by_word(args.language, text, book_text, start_position=0, similarity_metric='hamming', total_threads=int(args.number_threads))
+            text_result, similarity, start_position = execute_threads_search_substring_by_word(language, text, book_text, start_position=0, similarity_metric='hamming', total_threads=int(n_threads))
 
         if not text_result:
             text_result = ''
@@ -475,8 +459,28 @@ def main():
         line = separator.join([filename.strip(), text.strip(), text_result.strip(), str(similarity) + '\n'])
         output_f.write(line)
 
-    print('Similaridade Media: {}'.format(total_similarity / len(transcripts_text)))
+    print('Mean Similarity: {}'.format(total_similarity / len(transcripts_text)))
     output_f.close()
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-b', '--base_dir', default='./')
+    parser.add_argument('-i', '--input_transcripts_file', default='./output/transcription.csv')
+    parser.add_argument('-c', '--complete_text_file', default='./input/complete_text.txt')
+    parser.add_argument('-o', '--output_file', default='./output/result_with_threads.txt')
+    parser.add_argument('-l', '--language', default='pt',
+                        help='Options: pt (portuguese), pl (polish), it (italian), sp (spanish), fr (french), du (dutch), ge (german), en (english)')
+    parser.add_argument('-m', '--metric', default='hamming', help='Options: hamming (low accuracy, low computational cost), levenshtein (high accuracy, high computational cost) or ratcliff (average accuracy, average computational cost)')
+    parser.add_argument('-n', '--number_threads', default=16)
+    parser.add_argument('-t', '--search_type', default='char', help='Options: word or char')
+    parser.add_argument('-s', '--sequenced_text', action='store_true', default=False)
+
+    args = parser.parse_args()
+    # Load input files
+    transcript_file = join(args.base_dir, args.input_transcripts_file)
+    complete_text_file = join(args.base_dir, args.complete_text_file)
+    output_filepath = join(args.base_dir, args.output_file)
+    search_substring(transcript_file,complete_text_file, output_filepath, search_type=args.search_type, language=args.language, n_threads=args.number_threads)
 
 if __name__ == "__main__":
     main()

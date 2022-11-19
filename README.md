@@ -41,7 +41,7 @@ This step receives the json file from the previous step and performs the segment
 This functionality is provided by the script named "audio_segmentation.py" and can be used separately. Run the script using as input argument the path of the audio file (mp3) to be segmented.
 
 ```sh
-$ python segment_audio.py 
+$ python segment_tools.py 
 ```
 
 The input must be an mp3 file, which must be inside the input folder. After executing the script, the audio segments will be generated in the wavs folder, and the segments will have the same names as the original file.
@@ -52,7 +52,7 @@ The input must be an mp3 file, which must be inside the input folder. After exec
 Here there is a script to use Wav2Vec2. This functionality is provided by the script named "transcribe_audios.py" and can be used separately. Run the script using as input argument of the input directory of wavs files, the transcription output file. For example:
 
 ```sh
-$ python transcribe_audios.py
+$ python transcription_tools.py
 ```
 
 The script's default input is the contents of the wavs folder. The result will be a .csv (transcription.csv) file containing the transcript of each of the audio files present in the wavs folder.

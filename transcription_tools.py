@@ -61,24 +61,29 @@ def transcribe(processor, model, input_filepath, output_filepath):
 
     line = "{}|{}".format(filename, transcription[0])
     ofile.write(line + "\n")
-
     ofile.close()
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--base_dir', default='./')
-    parser.add_argument('--input_dir', default='./output/wavs', help='Wavs folder')
-    parser.add_argument('--output_file', default='./output/transcription.csv', help='Name of csv output file')      
-    parser.add_argument('--language', default='pt', help='du, en, fr, ge, it, pl, pt')
-    args = parser.parse_args()
+def transcribe_files(input_dir, output_filepath, language):
 
-    processor, model = load_model(args.language)
-    output_filepath = join(args.base_dir, args.output_file)
+    processor, model = load_model(language)
+
     ofile = open(output_filepath, 'w')
     ofile.close()
 
-    for filepath in tqdm(sorted(glob(join(args.base_dir, args.input_dir) + '/*.wav'))):
+    for filepath in tqdm(sorted(glob(input_dir + '/*.wav'))):
         transcribe(processor, model, filepath, output_filepath)
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-b', '--base_dir', default='./')
+    parser.add_argument('-i', '--input', default='./output/wavs', help='Wavs folder')
+    parser.add_argument('-o', '--output', default='./output/transcription.csv', help='Name of csv output file')
+    parser.add_argument('-l', '--language', default='pt', help='du, en, fr, ge, it, pl, pt')
+    args = parser.parse_args()
+
+    output_filepath = join(args.base_dir, args.output_file)
+    input_dir = join(args.base_dir, args.input_dir)
+    transcribe_files(input_dir, output_filepath, args.language)
 
 
 if __name__ == "__main__":
