@@ -48,7 +48,7 @@ def execute_pileline(args):
             input_transcript_file = output_transcript_filepath
             complete_text_file = txt_filepath
             output_filepath = join(output_audiobook, "result_search.csv")
-            search_substring(input_transcript_file, complete_text_file, output_filepath, search_type=args.search_type, language='pt', n_threads=10)
+            search_substring(input_transcript_file, complete_text_file, output_filepath, search_type='char', language='pt', n_threads=10)
 
 
 def main():
