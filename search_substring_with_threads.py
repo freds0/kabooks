@@ -176,12 +176,12 @@ def search_substring_by_char(threads_result_queue, threads_sentinel, threads_con
             similarity = textdistance.levenshtein.normalized_similarity(preprocess_string(substring.text),
                                                                         preprocess_string(substring_found.text))
             # Updates the best string found.
-            if similarity > best_similarity:
+            if similarity >= best_similarity:
                 best_similarity = similarity
                 best_substring_found = substring_found.text
 
             # Break if it find a phrase with great similarity of words.
-            if best_similarity >= 0.95:
+            if best_similarity >= 0.98:
                 new_start = start
                 # Stop other threads
                 threads_content_lock.acquire()
