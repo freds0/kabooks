@@ -9,12 +9,12 @@ from nltk.tokenize import sent_tokenize
 
 def sentencizer(text):
     #from nltk.tokenize import sent_tokenize
-    #sentences = sent_tokenize(text)
+    #sentences = sent_tokenize(text_tools)
     sent_tokenizer = nltk.data.load('tokenizers/punkt/portuguese.pickle')
     sentences = sent_tokenizer.tokenize(text)
     '''
     from nltk.tokenize import regexp_tokenize
-    sentences = regexp_tokenize(text, r'[\s]')
+    sentences = regexp_tokenize(text_tools, r'[\s]')
     '''
     sentences_list = []
     for sentence in sentences:

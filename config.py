@@ -11,7 +11,7 @@ class Config:
 
     # convert_audio_files configurations
     suffix_tmp_dir = '_tmp'
-    sample_rate_tmp = 16000
+    sample_rate = 24000
 
     # transcribe configurations
     transcription_file = 'transcription.csv'
